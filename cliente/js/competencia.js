@@ -10,6 +10,7 @@ function CompetenciasController () {
 
 		// Se obtiene de la api el listado de competencias
 		$.getJSON(server+"/competencias", function (data) {
+			
 		
 				// Se carga la información obtenida en el DOM
 				self.cargarCompetencias(data);
@@ -53,15 +54,17 @@ function CompetenciasController () {
 	},
 	// Esta método obtiene y carga los detalles de una competencia
 	this.obtenerCompetencia =  function (id){
+		
 		// Como luego se necesita usar "this" dentro de la función de callback, se guarda en self la referencia a CompetenciasController
 		var self = this;
 		// Se obtiene de la api el detalle de una competencia
 		var opciones = $.getJSON(server+"/competencias/"+id, function(data) {
 			// Se carga la información obtenida en el DOM
-	    	self.cargarCompetencia(id, data.competencias);
+	    	self.cargarCompetencia(id, data);
 	    });
 	},
 	this.cargarCompetencia = function (id, data){
+		
 		// data es el detalle de una competencia que retornó la api (un objeto json)
 		// Se coloca en el elemento correspondiente el nombre de la competencia
 		$(".nombre").text(data.competencias.nombre);
@@ -89,15 +92,16 @@ function CompetenciasController () {
 		// Se carga el nombre de la competencia en el título de la página
 		$("#nombreCompetencia").text(opciones.competencia);
 		// Se recorren las opciones de películas (opciones.peliculas es un array) para votar que retornó la api
+		let peliculas = shuffle(opciones.peliculas)
 		for (var i = 0; i < opciones.peliculas.length; i++) {
 			// Se selecciona el div que contiene la opción a cargar
 			var divOpcion = "#opcion"+(i+1);
 			// Se carga el valor del id de la película de la opción actual
-			$(divOpcion+" .idPelicula").val((opciones.peliculas)[i].id);
+			$(divOpcion+" .idPelicula").val((peliculas)[i].id);
 			// Se carga la imagen del poster de la película de la opción actual
-			$(divOpcion+" .poster").attr("src",(opciones.peliculas)[i].poster);
+			$(divOpcion+" .poster").attr("src",(peliculas)[i].poster);
 			// Se carga el título de la película de la opción actual
-			$(divOpcion+" .titulo").text((opciones.peliculas)[i].titulo);
+			$(divOpcion+" .titulo").text((peliculas)[i].titulo);
   		}
 	},
 
@@ -107,9 +111,11 @@ function CompetenciasController () {
 		var data = {'idPelicula': idPelicula};
 		// Se realiza el post a la api
 	    $.post(server+"/competencias/"+idCompetencia+"/voto", data, function(response) {
-	    	// Se redirige al usuario a ver los resultados de la competencia en la que votó
-		    window.location.replace("resultados.html?id="+idCompetencia);
+			// Se redirige al usuario a ver los resultados de la competencia en la que votó
+			window.location.replace("resultados.html?id="+idCompetencia);
+		    
 		}, 'json');
+		
 	},
 
 	// Este método obtiene los géneros existentes de películas del backend y los carga en un select en el DOM

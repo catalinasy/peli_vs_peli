@@ -7,3 +7,14 @@ function getQueryParam(param) {
         })
     return param;
 }
+
+function shuffle(opciones) {
+    var j, x, i;
+    for (i = opciones.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = opciones[i];
+        opciones[i] = opciones[j];
+        opciones[j] = x;
+    }
+    return opciones;
+}
